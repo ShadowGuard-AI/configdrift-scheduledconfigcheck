@@ -4,8 +4,6 @@ import sys
 import schedule
 import time
 import logging
-import os
-import hashlib
 import yaml
 from deepdiff import DeepDiff
 import requests
