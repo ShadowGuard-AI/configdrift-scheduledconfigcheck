@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+import sys
 import schedule
 import time
 import logging
@@ -149,7 +150,13 @@ def save_differences(differences, output_path):
     """
     try:
         with open(output_path, 'w') as f:
-            json.dump(differences, f, indent=4)  # Use JSON for easy readability
+            # DeepDiff results can hold sets and other values plain
+            # json.dump rejects; to_json is DeepDiff's own serializer
+            # and handles the shapes it produces.
+            if hasattr(differences, "to_json"):
+                f.write(differences.to_json())
+            else:
+                json.dump(differences, f, indent=4, default=str)
         logging.info(f"Differences saved to: {output_path}")
     except Exception as e:
         logging.error(f"Error saving differences to file: {e}")
@@ -251,7 +258,9 @@ def main():
         is_valid_interval(args.interval)
     except ValueError as e:
         logging.error(e)
-        return
+        # A rejected interval is a failed start, not a quiet success;
+        # a scheduler wrapper reading the exit code should see it.
+        sys.exit(1)
 
     # Schedule the configuration check
     schedule.every(args.interval).seconds.do(check_configuration, args.command, args.baseline, args.output, args.format, args.remote)
