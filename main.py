@@ -23,7 +23,8 @@ def setup_argparse():
     parser.add_argument("--output", help="Path to output differences to file.")
     parser.add_argument("--format", choices=['yaml', 'json'], default=None, help="Format of the baseline and command output (yaml or json). Autodetect if not specified.  Defaults to YAML if extension is ambiguous.")
     parser.add_argument("--remote", action='store_true', help="Treat the baseline as a URL to fetch the baseline configuration from.")
-    
+    parser.add_argument("--allow-http", action='store_true', help="Allow fetching a remote baseline over plain http. Without this flag a remote baseline URL must use https.")
+
     return parser.parse_args()
 
 def is_valid_interval(interval):
@@ -62,7 +63,7 @@ def run_command(command):
         logging.error(f"An unexpected error occurred: {e}")
         return None
 
-def load_baseline(baseline_path, format=None, remote=False):
+def load_baseline(baseline_path, format=None, remote=False, allow_http=False):
     """
     Loads the baseline configuration from a file or URL.
 
@@ -70,6 +71,9 @@ def load_baseline(baseline_path, format=None, remote=False):
         baseline_path (str): The path to the baseline file or URL.
         format (str, optional): The format of the baseline file (yaml or json). Defaults to None (autodetect).
         remote (bool, optional):  If True, treat the path as a URL.  Defaults to False.
+        allow_http (bool, optional): If True, allow a plain http remote
+            baseline URL. Defaults to False, so remote baselines must
+            use https.
 
     Returns:
         dict: The baseline configuration as a dictionary.  Returns None if loading fails.
@@ -77,7 +81,20 @@ def load_baseline(baseline_path, format=None, remote=False):
 
     try:
         if remote:
-            response = requests.get(baseline_path)
+            from urllib.parse import urlparse
+
+            scheme = urlparse(baseline_path).scheme.lower()
+            if scheme == "http" and not allow_http:
+                logging.error(
+                    "Refusing to fetch a remote baseline over plain http: "
+                    f"{baseline_path}. Use an https URL, or pass "
+                    "--allow-http to allow plain http."
+                )
+                return None
+            if scheme not in ("http", "https"):
+                logging.error(f"Unsupported remote baseline URL scheme: {scheme or 'none'}")
+                return None
+            response = requests.get(baseline_path, timeout=10)
             response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
             content = response.text
         else:
@@ -198,7 +215,7 @@ def format_output(config_string, format):
     logging.error(f"An unexpected error occurred while loading the baseline: {e}")
     return None
 
-def check_configuration(command, baseline_path, output_path=None, format=None, remote=False):
+def check_configuration(command, baseline_path, output_path=None, format=None, remote=False, allow_http=False):
     """
     Runs the command, loads the baseline, compares the configurations, and saves the differences.
 
@@ -228,7 +245,7 @@ def check_configuration(command, baseline_path, output_path=None, format=None, r
       return
 
     # Load the baseline configuration
-    baseline = load_baseline(baseline_path, format, remote)
+    baseline = load_baseline(baseline_path, format, remote, allow_http=allow_http)
 
     if baseline is None:
         logging.error("Failed to load baseline configuration. Aborting.")
@@ -236,6 +253,13 @@ def check_configuration(command, baseline_path, output_path=None, format=None, r
 
     # Compare the configurations
     differences = compare_configurations(baseline, current_config)
+
+    if differences is None:
+        # compare_configurations returns None only when the comparison
+        # itself failed. That is a failed check, not a clean result,
+        # so the no drift line must never stand in for it.
+        logging.error("Configuration check could not be completed: the comparison failed. See the error above.")
+        return
 
     if differences:
         logging.warning("Configuration drift detected!")
@@ -261,7 +285,7 @@ def main():
         sys.exit(1)
 
     # Schedule the configuration check
-    schedule.every(args.interval).seconds.do(check_configuration, args.command, args.baseline, args.output, args.format, args.remote)
+    schedule.every(args.interval).seconds.do(check_configuration, args.command, args.baseline, args.output, args.format, args.remote, args.allow_http)
 
     logging.info(f"Scheduled configuration check every {args.interval} seconds. Press Ctrl+C to exit.")
 
