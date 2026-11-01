@@ -47,6 +47,10 @@ def run_command(command):
     """
     try:
         # Execute the command using subprocess with proper security considerations
+        # I run the caller's command through bash on purpose: the
+        # argument is a command line, not a program name, and pipes
+        # and redirects in it are expected to work. Whoever schedules
+        # this tool is choosing what runs, on their own machine.
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable="/bin/bash")  # Explicitly use bash
         output, error = process.communicate()
 
@@ -245,6 +249,9 @@ def check_configuration(command, baseline_path, output_path=None, format=None, r
       return
 
     # Load the baseline configuration
+    # I load the baseline again on every run instead of caching
+    # it at startup. Editing the baseline file, or replacing the
+    # remote one, changes what the next run compares against.
     baseline = load_baseline(baseline_path, format, remote, allow_http=allow_http)
 
     if baseline is None:
@@ -262,6 +269,10 @@ def check_configuration(command, baseline_path, output_path=None, format=None, r
         return
 
     if differences:
+        # Drift is a log line and an optional file. This function
+        # returns nothing and the scheduler ignores results anyway,
+        # so a wrapper cannot learn from the exit code that a run
+        # found drift.
         logging.warning("Configuration drift detected!")
         logging.info(f"Differences: {differences}")
 
