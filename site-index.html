@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8"><title>configdrift-scheduledconfigcheck</title>
+<style>@font-face{font-family:Display;src:url(fonts/BigShouldersInline.ttf)} body{font-family:Georgia,serif;margin:2rem} h1,h2{font-family:Display,sans-serif} img{max-width:100%}</style></head>
+<body><img src="intro-banner.png" alt="Introduction banner">
+<h1>configdrift-ScheduledConfigCheck</h1><img src="banner.png" alt="Wordmark banner"><img src="scene.svg" alt="Animated scene">
+<img src="logo.png" alt="Logo"><p>Theme: Telegraph Boy's Bicycle Insignia.</p><button type='button'>RUN THE ROUND NOW</button><button type='button'>WRITE THE DIFFERENCES</button><button type='button'>FETCH THE BASELINE</button><section><h2>THE TIMED ROUND</h2><p>A scheduler runs one named command again and again. Each run reads the command output as a configuration, loads the baseline again with no caching, and compares the two with DeepDiff while ignoring order.</p></section><section><h2>TAKING THE JOB ON</h2><p>The install line is shown as printed, with its fault recorded in the notes. The working line is python3 main.py COMMAND BASELINE, and both positionals are required.</p></section><section><h2>CONTROLS IN A ROW</h2><p>Controls: -h, COMMAND, BASELINE, --interval (default 60, minimum 10), --output, --format (yaml or json, autodetect if left out, YAML if ambiguous), --remote (fetched each run, timeout 10 seconds), and --allow-http.</p></section><section><h2>WHEN THE ROUND FAILS</h2><p>The first run waits one full interval. An interval below 10 seconds exits 1 at startup. A failed comparison is an error, not a clean result. Drift carries no exit code.</p></section><h2>Facts from the code and the README</h2><ul><li>A scheduler runs one named command again and again.</li><li>Each run reads the command output as a configuration.</li><li>Each run loads the baseline again. No caching.</li><li>Each run compares the two with DeepDiff. Order ignored.</li><li>Drift found means one warning line, then the differences.</li><li>An output file is written only if --output was given.</li><li>No drift means one plain line: No drift found, in the words of the log line No configuration drift detected.</li><li>A failed comparison is an error. It is not a clean result.</li><li>Working line: python3 main.py COMMAND BASELINE, followed by the options.</li><li>COMMAND is required. BASELINE is required.</li><li>The parameter -h shows help and then exits.</li><li>COMMAND is the command to execute, run through bash.</li><li>BASELINE is a baseline file in YAML or JSON.</li><li>The parameter --interval gives seconds between runs, with a default of 60 and a minimum of 10.</li><li>The parameter --output gives a path for the differences file, written as JSON text.</li><li>The parameter --format takes yaml or json. Left out means autodetect.</li><li>An ambiguous extension defaults to YAML.</li><li>The flag --remote means the baseline is a URL, fetched each run.</li><li>The remote fetch timeout is 10 seconds.</li><li>The flag --allow-http allows plain http. Without it, https is required.</li><li>A fetched baseline is trusted as correct.</li><li>The README prints no description for --interval, and no description for --format. Both descriptions exist in the parser.</li><li>The first run is not immediate. It waits one full interval.</li><li>The scheduler is polled once a second.</li><li>An interval below 10 seconds exits 1 at startup.</li><li>Drift carries no exit code. The check returns nothing and the scheduler ignores results.</li><li>The repository carries an MIT License file. The README licence section gives a copyright line only, in a wrong organisation name.</li></ul>
+<pre>![Banner](banner.png)
+
+# configdrift-ScheduledConfigCheck
+A simple scheduler that periodically runs a user-defined command (e.g., a configuration extraction script) and compares the output to a baseline. Alerts if differences are found. Uses `schedule` and `subprocess`. - Focused on Detects and reports deviations from baseline configurations across systems or applications. Compares current configurations to a known-good state, highlighting changes that could introduce security vulnerabilities or compliance issues. Supports multiple configuration formats (e.g., YAML, JSON) and remote configuration retrieval.
+
+## Install
+`git clone https://github.com/ShadowStrikeHQ/configdrift-scheduledconfigcheck`
+
+## Usage
+`./configdrift-scheduledconfigcheck [params]`
+
+## Parameters
+- `-h`: Show help message and exit
+- `--interval`: No description provided
+- `--output`: Path to output differences to file.
+- `--format`: No description provided
+- `--remote`: Treat the baseline as a URL to fetch the baseline configuration from.
+- `--allow-http`: Allow fetching a remote baseline over plain http. Without this flag a remote baseline URL must use https.
+
+A remote baseline is fetched with a 10 second timeout and is trusted as the known good baseline: whatever the URL returns is treated as the correct configuration to compare against, so use a source you trust. Remote baselines must use https unless `--allow-http` is passed for a plain http URL.
+
+## License
+Copyright (c) ShadowStrikeHQ
+</pre>
+</body></html>
