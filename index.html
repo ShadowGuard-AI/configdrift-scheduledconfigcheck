@@ -1,164 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Configdrift Scheduledconfigcheck: what it is, how it runs, where it stops</title>
-<meta name="description" content="Configdrift Scheduledconfigcheck is one of my projects. The README in the repo is short, so this page sticks to what the files themselves show.">
-<style>
-:root {
-  --bg: #1a0c0c; --panel: #2a1412; --ink: #f0e6d6;
-  --mut: #381b18;
-  --acc: #c9a24b; --acc2: #94b2c4;
-  --line: #2a1412;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink);
-  font-family: Georgia, 'Times New Roman', serif; line-height: 1.55; }
-code, pre, .mono { font-family: 'Courier New', monospace; }
-a { color: var(--acc2); }
-.hero { padding: 3rem 6vw 1rem; }
-.hero img.banner { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; }
-.logo { width: 92px; height: 92px; border-radius: 18px;
-  border: 1px solid var(--line); }
-h1 { font-size: 2.4rem; margin: 0.4em 0 0.1em; }
-h2 { border-bottom: 2px solid var(--acc); padding-bottom: 0.2em;
-  margin-top: 2em; }
-.lede { font-size: 1.15rem; max-width: 62ch; }
-main { padding: 0 6vw 3rem; max-width: 1180px; margin: 0 auto; }
-.grid { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-.card { background: var(--panel); border: 1px solid var(--line);
-  border-radius: 12px; padding: 1rem 1.2rem; }
-.card.pop { animation: rise 0.7s ease both; }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; } }
-pre.code { background: #101014; color: #e8e6df; padding: 1rem 1.2rem;
-  border-radius: 12px; overflow-x: auto; font-size: 0.86rem;
-  border-left: 5px solid var(--acc); }
-table { border-collapse: collapse; width: 100%; }
-td, th { border-bottom: 1px solid var(--line); padding: 0.45rem 0.6rem;
-  text-align: left; }
-.shots { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.shots img { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; background: #f4f1e8; }
-footer { padding: 2rem 6vw; border-top: 1px solid var(--line);
-  color: var(--mut); }
-.rail { display: flex; gap: 1.2rem; align-items: flex-start; }
-.rail nav { position: sticky; top: 1rem; min-width: 180px; }
-@media (max-width: 760px) { .rail { flex-direction: column; }
-  .rail nav { position: static; } }
-@media (prefers-reduced-motion: reduce) {
-  .card.pop { animation: none; } * { scroll-behavior: auto; } }
-</style>
-</head>
-<body class="layout-ledger">
-<!-- This page exists for configdrift-scheduledconfigcheck alone: the layout (ledger),
-     the colors, and the type were picked for this project, not
-     shared with the other project pages. The code block below is
-     copied from the file it names, line for line. If it looks
-     plain, that is because the project is plain, and I would
-     rather the page match the project than dress it up. The one
-     thing I will not do here is oversell: what this project does
-     not do is stated on the page, not hidden from it. -->
-<header class="hero">
-  <img class="logo" src="assets/logo.png" alt="Configdrift Scheduledconfigcheck logo">
-  <img class="banner" src="assets/banner.png" alt="">
-  <h1>Configdrift Scheduledconfigcheck</h1>
-  <p class="mono"><a href="https://github.com/ShadowGuard-AI/configdrift-scheduledconfigcheck">github.com/ShadowGuard-AI/configdrift-scheduledconfigcheck</a></p>
-</header>
+<html lang="en-GB"><head><meta charset="utf-8"><title>configdrift-scheduledconfigcheck</title>
+<style>@font-face{font-family:Display;src:url(fonts/BigShouldersInline.ttf)} body{font-family:Georgia,serif;margin:2rem} h1,h2{font-family:Display,sans-serif} img{max-width:100%}</style></head>
+<body><img src="intro-banner.png" alt="Introduction banner">
+<h1>configdrift-ScheduledConfigCheck</h1><img src="banner.png" alt="Wordmark banner"><img src="scene.svg" alt="Animated scene">
+<img src="logo.png" alt="Logo"><p>Theme: Telegraph Boy's Bicycle Insignia.</p><button type='button'>RUN THE ROUND NOW</button><button type='button'>WRITE THE DIFFERENCES</button><button type='button'>FETCH THE BASELINE</button><section><h2>THE TIMED ROUND</h2><p>A scheduler runs one named command again and again. Each run reads the command output as a configuration, loads the baseline again with no caching, and compares the two with DeepDiff while ignoring order.</p></section><section><h2>TAKING THE JOB ON</h2><p>The install line is shown as printed, with its fault recorded in the notes. The working line is python3 main.py COMMAND BASELINE, and both positionals are required.</p></section><section><h2>CONTROLS IN A ROW</h2><p>Controls: -h, COMMAND, BASELINE, --interval (default 60, minimum 10), --output, --format (yaml or json, autodetect if left out, YAML if ambiguous), --remote (fetched each run, timeout 10 seconds), and --allow-http.</p></section><section><h2>WHEN THE ROUND FAILS</h2><p>The first run waits one full interval. An interval below 10 seconds exits 1 at startup. A failed comparison is an error, not a clean result. Drift carries no exit code.</p></section><h2>Facts from the code and the README</h2><ul><li>A scheduler runs one named command again and again.</li><li>Each run reads the command output as a configuration.</li><li>Each run loads the baseline again. No caching.</li><li>Each run compares the two with DeepDiff. Order ignored.</li><li>Drift found means one warning line, then the differences.</li><li>An output file is written only if --output was given.</li><li>No drift means one plain line: No drift found, in the words of the log line No configuration drift detected.</li><li>A failed comparison is an error. It is not a clean result.</li><li>Working line: python3 main.py COMMAND BASELINE, followed by the options.</li><li>COMMAND is required. BASELINE is required.</li><li>The parameter -h shows help and then exits.</li><li>COMMAND is the command to execute, run through bash.</li><li>BASELINE is a baseline file in YAML or JSON.</li><li>The parameter --interval gives seconds between runs, with a default of 60 and a minimum of 10.</li><li>The parameter --output gives a path for the differences file, written as JSON text.</li><li>The parameter --format takes yaml or json. Left out means autodetect.</li><li>An ambiguous extension defaults to YAML.</li><li>The flag --remote means the baseline is a URL, fetched each run.</li><li>The remote fetch timeout is 10 seconds.</li><li>The flag --allow-http allows plain http. Without it, https is required.</li><li>A fetched baseline is trusted as correct.</li><li>The README prints no description for --interval, and no description for --format. Both descriptions exist in the parser.</li><li>The first run is not immediate. It waits one full interval.</li><li>The scheduler is polled once a second.</li><li>An interval below 10 seconds exits 1 at startup.</li><li>Drift carries no exit code. The check returns nothing and the scheduler ignores results.</li><li>The repository carries an MIT License file. The README licence section gives a copyright line only, in a wrong organisation name.</li></ul>
+<pre>![Banner](banner.png)
 
-<main>
-  <section class="rail">
-    <nav aria-label="on this page">
-      <p class="mono"><a href="#run">Run it</a><br>
-      <a href="#files">The files</a><br>
-      <a href="#sheets">The sheets</a><br>
-      <a href="https://github.com/ShadowGuard-AI/configdrift-scheduledconfigcheck">The repo</a></p>
-    </nav>
-    <div>
-      <p class="lede">Configdrift Scheduledconfigcheck is one of my projects. The README in the repo is short, so this page sticks to what the files themselves show.</p>
-      <div class="grid">
-        <div class="card pop"><h3>What it is</h3>
-          <p>Configdrift Scheduledconfigcheck: 3 files, 309 counted
-          lines across Python 285, Markdown 18, Text 6. One job, done in the
-          open, in files you can read.</p></div>
-        <div class="card pop"><h3>The biggest piece</h3>
-          <p><code>main.py</code> carries the most
-          lines. If the project grows, that file is where the growth
-          lands first, for better or worse.</p></div>
-        <div class="card pop"><h3>The honest gap</h3>
-          <p>No test files yet. That is the honest gap, and the roadmap in the visuals folder says what the first one should cover.</p></div>
-      </div>
-      <section id="run">
-        <h2>Run it</h2>
-        <p>The repo README has the exact commands for this one. The
-        shape is the shape for most of my projects: clone it, read the
-        top file first so you know what will happen, then run it on
-        something you do not mind breaking.</p>
-        <p class="mono">$ git clone https://github.com/ShadowGuard-AI/configdrift-scheduledconfigcheck.git<br>$ cd configdrift-scheduledconfigcheck</p>
-      </section>
-      
-  <section aria-label="real code">
-    <h2>The code, as it sits in the repo</h2>
-    <p>From <code>main.py</code>, line 14 on. I did
-    not tidy it for the page. What you see is what the file has.</p>
-    <pre class="code"><code>logging.basicConfig(level=logging.INFO, format=&#x27;%(asctime)s - %(levelname)s - %(message)s&#x27;)
+# configdrift-ScheduledConfigCheck
+A simple scheduler that periodically runs a user-defined command (e.g., a configuration extraction script) and compares the output to a baseline. Alerts if differences are found. Uses `schedule` and `subprocess`. - Focused on Detects and reports deviations from baseline configurations across systems or applications. Compares current configurations to a known-good state, highlighting changes that could introduce security vulnerabilities or compliance issues. Supports multiple configuration formats (e.g., YAML, JSON) and remote configuration retrieval.
 
-def setup_argparse():
-    &quot;&quot;&quot;
-    Sets up the argument parser for the command-line interface.
-    &quot;&quot;&quot;
-    parser = argparse.ArgumentParser(description=&quot;A simple scheduler that periodically runs a user-defined command and compares the output to a baseline.&quot;)
-    parser.add_argument(&quot;command&quot;, help=&quot;The command to execute (e.g., &#x27;cat /etc/config.txt&#x27;).  Ensure it&#x27;s safe and doesn&#x27;t expose sensitive info if it fails.&quot;)
-    parser.add_argument(&quot;baseline&quot;, help=&quot;Path to the baseline file (YAML or JSON).&quot;)
-    parser.add_argument(&quot;--interval&quot;, type=int, default=60, help=&quot;Interval in seconds to run the command (default: 60).  Minimum is 10 seconds for resource safety.&quot;)
-    parser.add_argument(&quot;--output&quot;, help=&quot;Path to output differences to file.&quot;)
-    parser.add_argument(&quot;--format&quot;, choices=[&#x27;yaml&#x27;, &#x27;json&#x27;], default=None, help=&quot;Format of the baseline and command output (yaml or json). Autodetect if not specified.  Defaults to YAML if extension is ambiguous.&quot;)
-    parser.add_argument(&quot;--remote&quot;, action=&#x27;store_true&#x27;, help=&quot;Treat the baseline as a URL to fetch the baseline configuration from.&quot;)
-    
-    return parser.parse_args()
+## Install
+`git clone https://github.com/ShadowStrikeHQ/configdrift-scheduledconfigcheck`
 
-def is_valid_interval(interval):
-    &quot;&quot;&quot;
-    Validates that the interval is within acceptable bounds to prevent resource exhaustion.
-    &quot;&quot;&quot;
-    if interval &lt; 10:
-        raise ValueError(&quot;Interval must be at least 10 seconds to prevent resource exhaustion.&quot;)</code></pre>
-  </section>
-      <section id="files">
-        <h2>The files that matter</h2>
-        <table><tr><th>File</th><th>Lines</th></tr>
-        <tr><td><code>main.py</code></td><td>285</td></tr>
-        <tr><td><code>README.md</code></td><td>18</td></tr>
-        <tr><td><code>requirements.txt</code></td><td>6</td></tr>
-        </table>
-        <p>Names doing the work: <span class="mono">setup_argparse, is_valid_interval, run_command, load_baseline, compare_configurations, save_differences, format_output, check_configuration</span>.</p>
-      </section>
-      <section id="sheets">
-        <h2>Drawn by hand</h2>
-        <p>I sketch my projects on notebook paper so I have to
-        understand them well enough to draw them. The full set,
-        with the counts and how they were counted, is the
-        <a href="https://github.com/ShadowGuard-AI/configdrift-scheduledconfigcheck/tree/main/configdrift-scheduledconfigcheck-Visuals">configdrift-scheduledconfigcheck-Visuals</a>
-        folder in the repo. Nothing is drawn over the binder holes.
-        That is a rule, not a style.</p>
-        <div class="shots">
-          <img src="assets/architecture.png" alt="Hand drawn architecture sheet for Configdrift Scheduledconfigcheck">
-          <img src="assets/flowchart.png" alt="Hand drawn flowchart sheet for Configdrift Scheduledconfigcheck">
-          <img src="assets/product-map.png" alt="Hand drawn product map sheet for Configdrift Scheduledconfigcheck">
-        </div>
-      </section>
-    </div>
-  </section>
-</main>
-<footer>
-  <p>Configdrift Scheduledconfigcheck is one of my projects. This page was written
-  from the repo itself on 2026-10-30: the counts are the
-  repo's counts, the code is the repo's code, and the gaps are the
-  repo's gaps.</p>
-</footer>
-</body>
-</html>
+## Usage
+`./configdrift-scheduledconfigcheck [params]`
+
+## Parameters
+- `-h`: Show help message and exit
+- `--interval`: No description provided
+- `--output`: Path to output differences to file.
+- `--format`: No description provided
+- `--remote`: Treat the baseline as a URL to fetch the baseline configuration from.
+- `--allow-http`: Allow fetching a remote baseline over plain http. Without this flag a remote baseline URL must use https.
+
+A remote baseline is fetched with a 10 second timeout and is trusted as the known good baseline: whatever the URL returns is treated as the correct configuration to compare against, so use a source you trust. Remote baselines must use https unless `--allow-http` is passed for a plain http URL.
+
+## License
+Copyright (c) ShadowStrikeHQ
+</pre>
+</body></html>

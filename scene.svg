@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="Telegraph office with key hooks, ticket roll and bicycle badge">
+<rect width="1200" height="360" fill="#f2ead8"/>
+<rect y="250" width="1200" height="110" fill="#34604a"/>
+<g stroke="#3c3a36" stroke-width="4"><g><line x1="140" y1="60" x2="140" y2="110"/><circle cx="140" cy="122" r="11" fill="none" stroke="#b08c3e"/><animateTransform attributeName="transform" type="rotate" values="-3 140 60;3 140 60;-3 140 60" dur="5s" repeatCount="indefinite"/></g>
+<g><line x1="300" y1="60" x2="300" y2="110"/><circle cx="300" cy="122" r="11" fill="none" stroke="#b08c3e"/><animateTransform attributeName="transform" type="rotate" values="3 300 60;-3 300 60;3 300 60" dur="6s" repeatCount="indefinite"/></g></g>
+<g><circle cx="560" cy="150" r="52" fill="none" stroke="#b22c2c" stroke-width="9"/><rect x="608" y="138" width="220" height="24" fill="#faf8f0" stroke="#80848a"/><g fill="#263e6e"><circle cx="630" cy="150" r="3"><animate attributeName="cx" values="630;640;630" dur="3s" repeatCount="indefinite"/></circle><circle cx="660" cy="150" r="3"/><circle cx="690" cy="150" r="3"/><circle cx="720" cy="150" r="3"/><circle cx="750" cy="150" r="3"/></g><animateTransform attributeName="transform" type="rotate" values="0 560 150;6 560 150;0 560 150" dur="8s" repeatCount="indefinite"/></g>
+<g><rect x="950" y="90" width="150" height="110" fill="#faf8f0" stroke="#263e6e" stroke-width="3"/><circle cx="1025" cy="145" r="40" fill="#b08c3e"/><circle cx="1025" cy="145" r="26" fill="#263e6e"/><animateTransform attributeName="transform" type="rotate" values="0 1025 90;2 1025 90;0 1025 90" dur="7s" repeatCount="indefinite"/></g>
+</svg>
